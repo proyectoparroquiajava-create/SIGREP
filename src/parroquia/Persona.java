@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public abstract class Persona {
 
     private static final Pattern PATRON_NOMBRE =
-    		 Pattern.compile("^[A-Za-zÁÉÍÓÚáéíóú\\s]{2,60}$");
+    		 Pattern.compile("^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]{2,60}$");
 
     private final String nombreCompleto;
     private final String dni;
