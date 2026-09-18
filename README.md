@@ -1,5 +1,6 @@
 SIGREP (Sistema Integrado de Gestión de Registros Parroquiales)
 Programa creado para la digitalización de registros para la Parroquia Sagrada Familia
+
 Objetivo:
 
 Reemplazar el registro manual en libros físicos, hojas de Excel dispersas y Google Calendar por un único módulo en Java que permita:
@@ -20,5 +21,5 @@ Paradigmas utilizados:
 
 Requiere Java 16 o superior para ejecutarse.
 
-Puede instalar la versión mas actual(java 21) desde este link https://adoptium.net/temurin/releases/?version=21 en caso de no tenerla instala previamente.
+Puede instalar la versión mas actual(java 21) desde este link https://adoptium.net/temurin/releases/?version=21 en caso de no tenerla instalada previamente.
 
