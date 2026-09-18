@@ -12,7 +12,13 @@ Reemplazar el registro manual en libros físicos, hojas de Excel dispersas y Goo
 
 -Generar reportes mediante funciones de orden superior.
 
+Paradigmas utilizados:
 
-Requiere Java i6 o superior para ejecutarse.
+    Programación Orientada a eventos:desarrollo de la interfaz gráfica en Swing con WindowBuilder desde Eclipse IDE.
+    Programación Orientada a Objetos: desarrollo de clases, superclases, objetos y Fabricas (herencia, encapsulamiento, patrones Singleton y Factory Method).
+    Programación Funcional: map, filter y reduce sobre las colecciones de inscripciones para generar reportes.
 
-Puede instalar la versión mas actual(java 21) desde este link https://adoptium.net/temurin/releases/?version=21 en caso de no tenerla.
+Requiere Java 16 o superior para ejecutarse.
+
+Puede instalar la versión mas actual(java 21) desde este link https://adoptium.net/temurin/releases/?version=21 en caso de no tenerla instala previamente.
+
