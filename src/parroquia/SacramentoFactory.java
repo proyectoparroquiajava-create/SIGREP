@@ -8,7 +8,7 @@ import java.util.Set;
 public final class SacramentoFactory {
 
     private static final Set<String> TIPOS_SOPORTADOS =
-            Set.of("bautizo", "matrimonio", "retiro");
+            Set.of("bautizo", "matrimonio", "retiro","confirmación","Primera comunicación");
 
     private SacramentoFactory() {
       
@@ -51,6 +51,21 @@ public final class SacramentoFactory {
                         (LocalDate) args[2],
                         (Double) args[3],
                         (Integer) args[4]);
+            case "primera comunión":
+                return new PrimeraComunión(
+                        (Feligres) args[0],
+                        (Sacerdote) args[1],
+                        (LocalDate) args[2],
+                        (Double) args[3],
+                        (Persona) args[4]);
+
+            case "confirmación":
+                return new Confirmación(
+                        (Feligres) args[0],
+                        (Sacerdote) args[1],
+                        (LocalDate) args[2],
+                        (Double) args[3],
+                        (Persona) args[4]);
 
             default:
                 throw new TipoSacramentoNoSoportadoException(
