@@ -8,7 +8,7 @@ import java.util.Set;
 public final class SacramentoFactory {
 
     private static final Set<String> TIPOS_SOPORTADOS =
-            Set.of("bautizo", "matrimonio", "retiro","confirmación","Primera comunicación");
+            Set.of("bautizo", "matrimonio", "retiro","confirmación","Primera comunión");
 
     private SacramentoFactory() {
       
