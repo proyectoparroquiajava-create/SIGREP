@@ -1,17 +1,18 @@
 package parroquia;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
-
 
 public final class SacramentoFactory {
 
     private static final Set<String> TIPOS_SOPORTADOS =
-            Set.of("bautizo", "matrimonio", "retiro","confirmación","Primera comunión");
+            Set.of("bautizo", "matrimonio", "retiro",
+                    "confirmación", "primera comunión");
 
     private SacramentoFactory() {
-      
+
     }
 
     public static Sacramento crear(String tipo, Object... args) {
@@ -26,22 +27,24 @@ public final class SacramentoFactory {
                         (Persona) args[0],
                         (Sacerdote) args[1],
                         (LocalDate) args[2],
-                        (Double) args[3],
-                        (Persona) args[4],
-                        (Persona) args[5]);
+                        (LocalTime) args[3],
+                        (Double) args[4],
+                        (Persona) args[5],
+                        (Persona) args[6]);
 
             case "matrimonio":
 
                 @SuppressWarnings("unchecked")
                 List<Persona> testigos =
-                        (List<Persona>) args[5];
+                        (List<Persona>) args[6];
 
                 return new Matrimonio(
                         (Feligres) args[0],
                         (Sacerdote) args[1],
                         (LocalDate) args[2],
-                        (Double) args[3],
-                        (Feligres) args[4],
+                        (LocalTime) args[3],
+                        (Double) args[4],
+                        (Feligres) args[5],
                         testigos);
 
             case "retiro":
@@ -49,23 +52,27 @@ public final class SacramentoFactory {
                         (Feligres) args[0],
                         (Sacerdote) args[1],
                         (LocalDate) args[2],
-                        (Double) args[3],
-                        (Integer) args[4]);
+                        (LocalTime) args[3],
+                        (Double) args[4],
+                        (Integer) args[5]);
+
             case "primera comunión":
                 return new PrimeraComunión(
                         (Feligres) args[0],
                         (Sacerdote) args[1],
                         (LocalDate) args[2],
-                        (Double) args[3],
-                        (Persona) args[4]);
+                        (LocalTime) args[3],
+                        (Double) args[4],
+                        (Persona) args[5]);
 
             case "confirmación":
                 return new Confirmación(
                         (Feligres) args[0],
                         (Sacerdote) args[1],
                         (LocalDate) args[2],
-                        (Double) args[3],
-                        (Persona) args[4]);
+                        (LocalTime) args[3],
+                        (Double) args[4],
+                        (Persona) args[5]);
 
             default:
                 throw new TipoSacramentoNoSoportadoException(

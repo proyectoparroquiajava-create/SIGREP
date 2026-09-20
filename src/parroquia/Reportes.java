@@ -19,9 +19,23 @@ public final class Reportes {
    
     public static List<String> obtenerResumenes(List<Inscripcion> inscripciones) {
         return inscripciones.stream()
-                .map(i -> i.getSacramento().resumen())
-                .collect(Collectors.toList());
-    }
+        		 .map(i -> {
+                     Persona persona = i.getSacramento().getBeneficiario();
+
+                     String direccion = "";
+
+                     if (persona instanceof Feligres feligres) {
+                         direccion = feligres.getDireccion();
+                     }
+
+                     return "Nombre: " + persona.getNombreCompleto()
+                             + " | DNI: " + persona.getDni()
+                             + " | Teléfono: " + persona.getTelefono()
+                             + " | Dirección: " + direccion
+                             + " | " + i.getSacramento().resumen();
+                 })
+                 .collect(Collectors.toList());
+     }
 
    
     public static double calcularTotalRecaudado(List<Inscripcion> inscripciones) {

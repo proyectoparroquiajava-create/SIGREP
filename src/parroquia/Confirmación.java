@@ -1,15 +1,18 @@
 package parroquia;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Confirmación extends Sacramento {
 
     private final Persona padrino;
 
     public Confirmación(Feligres beneficiario, Sacerdote sacerdote,
-            LocalDate fechaProgramada, double costo, Persona padrino) {
+            LocalDate fechaProgramada, LocalTime hora,
+            double costo, Persona padrino) {
 
-        super(beneficiario, sacerdote, fechaProgramada, costo);
+        super(beneficiario, sacerdote, fechaProgramada, hora, costo);
+
         this.padrino = padrino;
     }
 
@@ -17,7 +20,6 @@ public class Confirmación extends Sacramento {
         return padrino;
     }
 
-    @Override
     public String tipo() {
         return "Confirmación";
     }

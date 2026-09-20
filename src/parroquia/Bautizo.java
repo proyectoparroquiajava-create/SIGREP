@@ -1,6 +1,7 @@
 package parroquia;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Bautizo extends Sacramento {
 
@@ -8,10 +9,10 @@ public class Bautizo extends Sacramento {
     private final Persona madrina;
 
     public Bautizo(Persona beneficiario, Sacerdote sacerdote,
-                   LocalDate fechaProgramada, double costo,
-                   Persona padrino, Persona madrina) {
+            LocalDate fechaProgramada, LocalTime hora, double costo,
+            Persona padrino, Persona madrina) {
 
-        super(beneficiario, sacerdote, fechaProgramada, costo);
+        super(beneficiario, sacerdote, fechaProgramada, hora, costo);
 
         this.padrino = padrino;
         this.madrina = madrina;

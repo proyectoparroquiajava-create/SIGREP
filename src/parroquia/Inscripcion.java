@@ -37,20 +37,34 @@ public class Inscripcion {
         if (recibo != null) {
             throw new DatosInvalidosException("Esta inscripcion ya tiene un recibo emitido.");
         }
+
         recibo = new Recibo(
                 "R-" + id.substring(0, 8).toUpperCase(),
                 sacramento.getCosto(),
                 LocalDateTime.now(),
                 sacramento.tipo());
+
         return recibo;
     }
 
     /** Representacion simple en texto, usada para el respaldo en disco. */
     public String aLineaTexto() {
+
+        String direccion = "";
+
+        if (sacramento.getBeneficiario() instanceof Feligres feligres) {
+            direccion = feligres.getDireccion();
+        }
+
         return String.format(
-                "id=%s | tipo=%s | beneficiario=%s | fechaProgramada=%s | costo=%.2f | recibo=%s",
-                id, sacramento.tipo(), sacramento.getBeneficiario().getNombreCompleto(),
-                sacramento.getFechaProgramada(), sacramento.getCosto(),
+                "id=%s | tipo=%s | beneficiario=%s | direccion=%s | fechaProgramada=%s | hora=%s | costo=%.2f | recibo=%s",
+                id,
+                sacramento.tipo(),
+                sacramento.getBeneficiario().getNombreCompleto(),
+                direccion,
+                sacramento.getFechaProgramada(),
+                sacramento.getHora(),
+                sacramento.getCosto(),
                 recibo != null ? recibo.numero() : "pendiente");
     }
 }

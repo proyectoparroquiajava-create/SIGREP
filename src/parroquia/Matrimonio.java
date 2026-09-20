@@ -1,6 +1,7 @@
 package parroquia;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class Matrimonio extends Sacramento {
@@ -9,10 +10,10 @@ public class Matrimonio extends Sacramento {
     private final List<Persona> testigos;
 
     public Matrimonio(Feligres beneficiario, Sacerdote sacerdote,
-                      LocalDate fechaProgramada, double costo,
-                      Feligres contrayente, List<Persona> testigos) {
+            LocalDate fechaProgramada, LocalTime hora, double costo,
+            Feligres contrayente, List<Persona> testigos) {
 
-        super(beneficiario, sacerdote, fechaProgramada, costo);
+        super(beneficiario, sacerdote, fechaProgramada, hora, costo);
 
         if (testigos == null || testigos.size() < 2) {
             throw new DatosInvalidosException(

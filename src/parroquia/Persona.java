@@ -13,13 +13,14 @@ public abstract class Persona {
     private final String dni;
     private final String telefono;
     private final LocalDate fechaRegistro;
+    
 
     protected Persona(String nombreCompleto, String dni, String telefono) {
 
         validarNombre(nombreCompleto);
         validarDni(dni);
         validarTelefono(telefono);
-
+        
         this.nombreCompleto = nombreCompleto.trim();
         this.dni = dni;
         this.telefono = telefono;
@@ -43,9 +44,9 @@ public abstract class Persona {
     }
 
     private static void validarTelefono(String telefono) {
-        if (telefono == null || !telefono.matches("\\d{9}")) {
+        if (telefono == null || !telefono.matches("9\\d{8}")) {
             throw new DatosInvalidosException(
-                    "El telefono debe tener 9 digitos numericos.");
+                    "El telefono debe tener 9 digitos númericos y empezar con 9.");
         }
     }
 
