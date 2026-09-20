@@ -62,9 +62,9 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public VentanaPrincipal() {
-        setTitle("Sistema Parroquial - Parroquia Sagrada Familia");
+        setTitle("SIGREP(Sistema Integrado De Gestion de Registros Parroquiales)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 900, 650);
+        setBounds(100, 100, 976, 650);
 
         contentPane = new JPanel();
         contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -88,7 +88,7 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblNombre);
 
         txtNombre = new JTextField();
-        txtNombre.setBounds(140, 37, 220, 20);
+        txtNombre.setBounds(140, 37, 200, 20);
         contentPane.add(txtNombre);
 
         JLabel lblDni = new JLabel("DNI (8 digitos):");
@@ -96,7 +96,7 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblDni);
 
         txtDni = new JTextField();
-        txtDni.setBounds(140, 62, 220, 20);
+        txtDni.setBounds(140, 62, 200, 20);
         contentPane.add(txtDni);
 
         JLabel lblTelefono = new JLabel("Telefono:");
@@ -104,7 +104,7 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblTelefono);
 
         txtTelefono = new JTextField();
-        txtTelefono.setBounds(140, 87, 220, 20);
+        txtTelefono.setBounds(140, 87, 200, 20);
         contentPane.add(txtTelefono);
 
         JLabel lblRol = new JLabel("Rol:");
@@ -112,19 +112,19 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblRol);
 
         comboRol = new JComboBox<>(new String[] { "Feligres", "Sacerdote" });
-        comboRol.setBounds(140, 112, 220, 22);
+        comboRol.setBounds(140, 112, 200, 22);
         contentPane.add(comboRol);
 
-        JLabel lblDireccionCargo = new JLabel("Direccion (feligres) / Cargo (sacerdote):");
+        JLabel lblDireccionCargo = new JLabel("Dirección:");
         lblDireccionCargo.setBounds(10, 140, 260, 14);
         contentPane.add(lblDireccionCargo);
 
         txtDireccionCargo = new JTextField();
-        txtDireccionCargo.setBounds(10, 160, 350, 20);
+        txtDireccionCargo.setBounds(10, 160, 328, 20);
         contentPane.add(txtDireccionCargo);
 
         JButton btnRegistrarPersona = new JButton("Registrar persona");
-        btnRegistrarPersona.setBounds(10, 190, 180, 28);
+        btnRegistrarPersona.setBounds(10, 190, 142, 28);
         btnRegistrarPersona.addActionListener(this::alRegistrarPersona);
         contentPane.add(btnRegistrarPersona);
     }
@@ -132,34 +132,45 @@ public class VentanaPrincipal extends JFrame {
     private void construirSeccionTablaPersonas() {
         JLabel lblTablaPersonas = new JLabel("Personas registradas");
         lblTablaPersonas.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblTablaPersonas.setBounds(400, 10, 250, 20);
+        lblTablaPersonas.setBounds(380, 10, 250, 20);
         contentPane.add(lblTablaPersonas);
 
-        modeloTabla = new DefaultTableModel(new Object[] { "Rol", "Nombre", "DNI", "Telefono" }, 0) {
+        modeloTabla = new DefaultTableModel(new Object[] { "Rol", "Nombre", "DNI", "Telefono", "Dirección" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
+
         tablaPersonas = new JTable(modeloTabla);
 
         JScrollPane scrollTabla = new JScrollPane(tablaPersonas);
-        scrollTabla.setBounds(400, 35, 470, 180);
+        scrollTabla.setBounds(380, 39, 470, 115);
         contentPane.add(scrollTabla);
+
+        JButton btnModificarPersona = new JButton("Modificar");
+        btnModificarPersona.setBounds(380, 160, 120, 25);
+        btnModificarPersona.addActionListener(this::alModificarPersona);
+        contentPane.add(btnModificarPersona);
+
+        JButton btnEliminarPersona = new JButton("Eliminar");
+        btnEliminarPersona.setBounds(510, 160, 120, 25);
+        btnEliminarPersona.addActionListener(this::alEliminarPersona);
+        contentPane.add(btnEliminarPersona);
     }
 
     private void construirSeccionInscripcion() {
         JLabel lblTitulo2 = new JLabel("2. Registrar inscripcion a sacramento y emitir recibo");
         lblTitulo2.setFont(new Font("Tahoma", Font.BOLD, 12));
-        lblTitulo2.setBounds(10, 230, 450, 20);
+        lblTitulo2.setBounds(10, 230, 333, 20);
         contentPane.add(lblTitulo2);
 
         JLabel lblTipo = new JLabel("Tipo:");
         lblTipo.setBounds(10, 260, 100, 14);
         contentPane.add(lblTipo);
 
-        comboTipoSacramento = new JComboBox<>(new String[] { "Bautizo", "Matrimonio", "Retiro" });
-        comboTipoSacramento.setBounds(140, 257, 220, 22);
+        comboTipoSacramento = new JComboBox<>(new String[] { "Bautizo", "Matrimonio", "Retiro", "Primera Comunión", "Confirmación" });
+        comboTipoSacramento.setBounds(120, 256, 200, 22);
         comboTipoSacramento.addActionListener(this::alCambiarTipoSacramento);
         contentPane.add(comboTipoSacramento);
 
@@ -168,7 +179,7 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblBeneficiario);
 
         comboBeneficiario = new JComboBox<>();
-        comboBeneficiario.setBounds(140, 282, 220, 22);
+        comboBeneficiario.setBounds(120, 281, 200, 22);
         contentPane.add(comboBeneficiario);
 
         JLabel lblCosto = new JLabel("Costo (S/):");
@@ -176,7 +187,7 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblCosto);
 
         txtCosto = new JTextField("80.0");
-        txtCosto.setBounds(140, 307, 100, 20);
+        txtCosto.setBounds(120, 307, 100, 20);
         contentPane.add(txtCosto);
 
         JLabel lblDias = new JLabel("Dias desde hoy:");
@@ -184,7 +195,7 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblDias);
 
         txtDiasParaFecha = new JTextField("15");
-        txtDiasParaFecha.setBounds(140, 332, 100, 20);
+        txtDiasParaFecha.setBounds(120, 332, 100, 20);
         txtDiasParaFecha.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -201,6 +212,7 @@ public class VentanaPrincipal extends JFrame {
                 actualizarCuposDisponibles();
             }
         });
+
         contentPane.add(txtDiasParaFecha);
 
         lblCupos = new JLabel("Cupos totales:");
@@ -208,7 +220,7 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblCupos);
 
         txtCupos = new JTextField("40");
-        txtCupos.setBounds(140, 357, 100, 20);
+        txtCupos.setBounds(120, 357, 100, 20);
         contentPane.add(txtCupos);
 
         lblCuposDetalle = new JLabel("");
@@ -216,44 +228,44 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblCuposDetalle);
 
         lblCampoExtra1 = new JLabel("Padrino:");
-        lblCampoExtra1.setBounds(400, 260, 100, 14);
+        lblCampoExtra1.setBounds(380, 197, 100, 14);
         contentPane.add(lblCampoExtra1);
 
         comboCampoExtra1 = new JComboBox<>();
-        comboCampoExtra1.setBounds(510, 257, 360, 22);
+        comboCampoExtra1.setBounds(490, 193, 360, 22);
         contentPane.add(comboCampoExtra1);
 
         lblCampoExtra2 = new JLabel("Madrina:");
-        lblCampoExtra2.setBounds(400, 285, 100, 14);
+        lblCampoExtra2.setBounds(380, 221, 100, 14);
         contentPane.add(lblCampoExtra2);
 
         comboCampoExtra2 = new JComboBox<>();
-        comboCampoExtra2.setBounds(510, 282, 360, 22);
+        comboCampoExtra2.setBounds(490, 217, 360, 22);
         contentPane.add(comboCampoExtra2);
 
         lblCampoExtra3 = new JLabel("Testigo 2:");
-        lblCampoExtra3.setBounds(400, 310, 100, 14);
+        lblCampoExtra3.setBounds(380, 248, 100, 14);
         contentPane.add(lblCampoExtra3);
 
         comboCampoExtra3 = new JComboBox<>();
-        comboCampoExtra3.setBounds(510, 307, 360, 22);
+        comboCampoExtra3.setBounds(490, 244, 360, 22);
         contentPane.add(comboCampoExtra3);
 
         JLabel lblSacerdote = new JLabel("Sacerdote:");
-        lblSacerdote.setBounds(400, 335, 100, 14);
+        lblSacerdote.setBounds(380, 281, 100, 14);
         contentPane.add(lblSacerdote);
 
         comboSacerdote = new JComboBox<>();
-        comboSacerdote.setBounds(510, 332, 360, 22);
+        comboSacerdote.setBounds(490, 271, 360, 28);
         contentPane.add(comboSacerdote);
-        
+
         JButton btnActualizarCombos = new JButton("Actualizar listas");
-        btnActualizarCombos.setBounds(10, 390, 150, 28);
+        btnActualizarCombos.setBounds(10, 390, 129, 28);
         btnActualizarCombos.addActionListener(this::alActualizarCombos);
         contentPane.add(btnActualizarCombos);
 
         JButton btnCrearInscripcion = new JButton("Crear inscripcion y emitir recibo");
-        btnCrearInscripcion.setBounds(170, 390, 230, 28);
+        btnCrearInscripcion.setBounds(149, 390, 190, 28);
         btnCrearInscripcion.addActionListener(this::alCrearInscripcion);
         contentPane.add(btnCrearInscripcion);
 
@@ -267,25 +279,31 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(lblTitulo3);
 
         JButton btnReporteTipo = new JButton("Reporte del tipo seleccionado");
-        btnReporteTipo.setBounds(10, 458, 220, 28);
+        btnReporteTipo.setBounds(10, 458, 190, 28);
         btnReporteTipo.addActionListener(this::alGenerarReportePorTipo);
         contentPane.add(btnReporteTipo);
 
         JButton btnTotalRecaudado = new JButton("Calcular total recaudado");
-        btnTotalRecaudado.setBounds(240, 458, 190, 28);
+        btnTotalRecaudado.setBounds(210, 458, 160, 28);
         btnTotalRecaudado.addActionListener(this::alCalcularTotal);
         contentPane.add(btnTotalRecaudado);
 
         JButton btnGuardarRespaldo = new JButton("Guardar respaldo");
-        btnGuardarRespaldo.setBounds(440, 458, 160, 28);
+        btnGuardarRespaldo.setBounds(380, 461, 142, 28);
         btnGuardarRespaldo.addActionListener(this::alGuardarRespaldo);
         contentPane.add(btnGuardarRespaldo);
 
         areaResultado = new JTextArea();
         areaResultado.setEditable(false);
+
         JScrollPane scrollResultado = new JScrollPane(areaResultado);
         scrollResultado.setBounds(10, 495, 860, 105);
         contentPane.add(scrollResultado);
+        
+        JLabel lblNewLabel = new JLabel("imagen");
+        lblNewLabel.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/imagen/imagen 3.jpeg")));
+        lblNewLabel.setBounds(654, 310, 196, 176);
+        contentPane.add(lblNewLabel);
     }
 
     // ------------------------------------------------------------
@@ -297,25 +315,168 @@ public class VentanaPrincipal extends JFrame {
             String nombre = txtNombre.getText().trim();
             String dni = txtDni.getText().trim();
             String telefono = txtTelefono.getText().trim();
-            String direccionOCargo = txtDireccionCargo.getText().trim();
+            String direccionCargo = txtDireccionCargo.getText().trim();
             String rol = (String) comboRol.getSelectedItem();
 
             Persona nuevaPersona = "Feligres".equals(rol)
-                    ? new Feligres(nombre, dni, telefono, direccionOCargo)
-                    : new Sacerdote(nombre, dni, telefono, direccionOCargo);
+                    ? new Feligres(nombre, dni, telefono, direccionCargo)
+                    : new Sacerdote(nombre, dni, telefono, direccionCargo);
 
             repositorio.registrarPersona(nuevaPersona);
             personasPorClave.put(claveDe(nuevaPersona), nuevaPersona);
 
-            modeloTabla.addRow(new Object[] { rol, nuevaPersona.getNombreCompleto(), dni, telefono });
+            modeloTabla.addRow(new Object[] { rol, nuevaPersona.getNombreCompleto(), dni, telefono, direccionCargo });
             actualizarCombosDePersonas();
             limpiarFormularioPersona();
 
             JOptionPane.showMessageDialog(this, "Persona registrada correctamente.",
                     "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (ExcepcionSistemaParroquial error) {
             JOptionPane.showMessageDialog(this, error.getMessage(),
                     "Error de validacion", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void alModificarPersona(ActionEvent evento) {
+        int fila = tablaPersonas.getSelectedRow();
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar una persona de la tabla.",
+                    "Modificar persona",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String rolActual = modeloTabla.getValueAt(fila, 0).toString();
+        String nombreActual = modeloTabla.getValueAt(fila, 1).toString();
+        String dniActual = modeloTabla.getValueAt(fila, 2).toString();
+        String telefonoActual = modeloTabla.getValueAt(fila, 3).toString();
+        String direccionActual = modeloTabla.getValueAt(fila, 4).toString();
+
+        String nuevoNombre = JOptionPane.showInputDialog(this, "Nombre completo:", nombreActual);
+
+        if (nuevoNombre == null) {
+            return;
+        }
+
+        String nuevoDni = JOptionPane.showInputDialog(this, "DNI:", dniActual);
+
+        if (nuevoDni == null) {
+            return;
+        }
+
+        String nuevoTelefono = JOptionPane.showInputDialog(this, "Teléfono:", telefonoActual);
+
+        if (nuevoTelefono == null) {
+            return;
+        }
+
+        String nuevaDireccion = JOptionPane.showInputDialog(this, "Dirección:", direccionActual);
+
+        if (nuevaDireccion == null) {
+            return;
+        }
+
+        try {
+            Persona personaActualizada;
+
+            if ("Feligres".equals(rolActual)) {
+                personaActualizada = new Feligres(nuevoNombre, nuevoDni, nuevoTelefono, nuevaDireccion);
+            } else {
+                personaActualizada = new Sacerdote(nuevoNombre, nuevoDni, nuevoTelefono, nuevaDireccion);
+            }
+
+            repositorio.actualizarPersona(dniActual, personaActualizada);
+
+            String claveAnterior = null;
+
+            for (Map.Entry<String, Persona> entrada : personasPorClave.entrySet()) {
+                if (entrada.getValue().getDni().equals(dniActual)) {
+                    claveAnterior = entrada.getKey();
+                    break;
+                }
+            }
+
+            if (claveAnterior != null) {
+                personasPorClave.remove(claveAnterior);
+            }
+
+            personasPorClave.put(claveDe(personaActualizada), personaActualizada);
+
+            modeloTabla.setValueAt(nuevoNombre, fila, 1);
+            modeloTabla.setValueAt(nuevoDni, fila, 2);
+            modeloTabla.setValueAt(nuevoTelefono, fila, 3);
+            modeloTabla.setValueAt(nuevaDireccion, fila, 4);
+
+            actualizarCombosDePersonas();
+
+            JOptionPane.showMessageDialog(this,
+                    "Persona modificada correctamente.",
+                    "Modificación exitosa",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (ExcepcionSistemaParroquial error) {
+            JOptionPane.showMessageDialog(this,
+                    error.getMessage(),
+                    "Error de validación",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void alEliminarPersona(ActionEvent evento) {
+        int fila = tablaPersonas.getSelectedRow();
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar una persona de la tabla.",
+                    "Eliminar persona",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String nombre = modeloTabla.getValueAt(fila, 1).toString();
+        String dni = modeloTabla.getValueAt(fila, 2).toString();
+
+        int respuesta = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de eliminar a " + nombre + "?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION);
+
+        if (respuesta != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            repositorio.eliminarPersona(dni);
+
+            String claveEliminar = null;
+
+            for (Map.Entry<String, Persona> entrada : personasPorClave.entrySet()) {
+                if (entrada.getValue().getDni().equals(dni)) {
+                    claveEliminar = entrada.getKey();
+                    break;
+                }
+            }
+
+            if (claveEliminar != null) {
+                personasPorClave.remove(claveEliminar);
+            }
+
+            modeloTabla.removeRow(fila);
+            actualizarCombosDePersonas();
+
+            JOptionPane.showMessageDialog(this,
+                    "Persona eliminada correctamente.",
+                    "Eliminación exitosa",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (ExcepcionSistemaParroquial error) {
+            JOptionPane.showMessageDialog(this,
+                    error.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -330,9 +491,11 @@ public class VentanaPrincipal extends JFrame {
     private void alCrearInscripcion(ActionEvent evento) {
         try {
             Persona beneficiario = personasPorClave.get((String) comboBeneficiario.getSelectedItem());
+
             if (beneficiario == null) {
                 throw new DatosInvalidosException("Debe registrar y seleccionar un beneficiario.");
             }
+
             Persona personaSacerdote =
                     personasPorClave.get((String) comboSacerdote.getSelectedItem());
 
@@ -348,7 +511,7 @@ public class VentanaPrincipal extends JFrame {
             LocalDate fecha = LocalDate.now().plusDays(dias);
             String tipoUi = (String) comboTipoSacramento.getSelectedItem();
 
-            Sacramento sacramento = crearSacramentoSegunTipo(tipoUi, beneficiario,sacerdote, fecha, costo);
+            Sacramento sacramento = crearSacramentoSegunTipo(tipoUi, beneficiario, sacerdote, fecha, costo);
             Inscripcion inscripcion = new Inscripcion(sacramento);
             var recibo = inscripcion.emitirRecibo();
             repositorio.registrarInscripcion(inscripcion);
@@ -356,22 +519,32 @@ public class VentanaPrincipal extends JFrame {
 
             String texto = "Inscripcion creada.\n" + inscripcion.aLineaTexto()
                     + "\nRecibo emitido: " + recibo.numero() + " por S/ " + String.format("%.2f", recibo.monto());
+
             if (sacramento instanceof Retiro) {
                 texto += "\nCupos disponibles en esa fecha: "
                         + repositorio.cuposDisponiblesRetiroEn(fecha)
                         + " de " + ((Retiro) sacramento).getCuposTotales();
             }
+
             areaResultado.setText(texto);
+
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "El costo, los dias y los cupos deben ser numeros validos.",
-                    "Error de formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "El costo, los dias y los cupos deben ser numeros validos.",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE);
+
         } catch (ClassCastException ex) {
             JOptionPane.showMessageDialog(this,
                     "Matrimonio y retiro requieren feligreses como beneficiario (y contrayente en matrimonio).",
-                    "Error de validacion", JOptionPane.ERROR_MESSAGE);
+                    "Error de validacion",
+                    JOptionPane.ERROR_MESSAGE);
+
         } catch (ExcepcionSistemaParroquial error) {
-            JOptionPane.showMessageDialog(this, error.getMessage(),
-                    "Error de validacion", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    error.getMessage(),
+                    "Error de validacion",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -379,7 +552,6 @@ public class VentanaPrincipal extends JFrame {
             Sacerdote sacerdote, LocalDate fecha, double costo) {
 
         if ("Bautizo".equals(tipoUi)) {
-
             Persona padrino =
                     personasPorClave.get((String) comboCampoExtra1.getSelectedItem());
 
@@ -422,7 +594,6 @@ public class VentanaPrincipal extends JFrame {
         }
 
         if ("Matrimonio".equals(tipoUi)) {
-
             Persona contrayente =
                     personasPorClave.get((String) comboCampoExtra1.getSelectedItem());
 
@@ -444,14 +615,12 @@ public class VentanaPrincipal extends JFrame {
 
             if (beneficiario.equals(testigo1)
                     || beneficiario.equals(testigo2)) {
-
                 throw new DatosInvalidosException(
                         "Un contrayente no puede ser su propio testigo.");
             }
 
             if (contrayente.equals(testigo1)
                     || contrayente.equals(testigo2)) {
-
                 throw new DatosInvalidosException(
                         "Un contrayente no puede ser su propio testigo.");
             }
@@ -465,20 +634,17 @@ public class VentanaPrincipal extends JFrame {
                     || sacerdote.equals(contrayente)
                     || sacerdote.equals(testigo1)
                     || sacerdote.equals(testigo2)) {
-
                 throw new DatosInvalidosException(
                         "El sacerdote encargado no puede ocupar otro rol en el mismo matrimonio.");
             }
 
             if (!(beneficiario instanceof Feligres)
                     || !(contrayente instanceof Feligres)) {
-
                 throw new DatosInvalidosException(
                         "El beneficiario y el contrayente deben ser feligreses.");
             }
 
             List<Persona> testigos = new ArrayList<>();
-
             testigos.add(testigo1);
             testigos.add(testigo2);
 
@@ -492,6 +658,82 @@ public class VentanaPrincipal extends JFrame {
                     testigos);
         }
 
+        if ("Primera Comunión".equals(tipoUi)) {
+            Persona padrino =
+                    personasPorClave.get((String) comboCampoExtra1.getSelectedItem());
+
+            Persona madrina =
+                    personasPorClave.get((String) comboCampoExtra2.getSelectedItem());
+
+            if (!(beneficiario instanceof Feligres)) {
+                throw new DatosInvalidosException(
+                        "El beneficiario de Primera Comunión debe ser un feligrés.");
+            }
+
+            if (padrino == null && madrina == null) {
+                throw new DatosInvalidosException(
+                        "Debe seleccionar un padrino o una madrina.");
+            }
+
+            if (padrino != null && madrina != null) {
+                throw new DatosInvalidosException(
+                        "Debe seleccionar solo un padrino o una madrina, no ambos.");
+            }
+
+            Persona acompanante = padrino != null ? padrino : madrina;
+
+            if (beneficiario.equals(acompanante)) {
+                throw new DatosInvalidosException(
+                        "El beneficiario no puede ser su propio padrino o madrina.");
+            }
+
+            if (sacerdote.equals(acompanante)) {
+                throw new DatosInvalidosException(
+                        "El sacerdote encargado no puede ser padrino o madrina.");
+            }
+
+            return SacramentoFactory.crear(
+                    "primera comunión",
+                    beneficiario,
+                    sacerdote,
+                    fecha,
+                    costo,
+                    acompanante);
+        }
+
+        if ("Confirmación".equals(tipoUi)) {
+            Persona acompanante =
+                    personasPorClave.get((String) comboCampoExtra1.getSelectedItem());
+
+            if (acompanante == null) {
+                throw new DatosInvalidosException(
+                        "Debe seleccionar un padrino o una madrina.");
+            }
+
+            if (!(beneficiario instanceof Feligres)) {
+                throw new DatosInvalidosException(
+                        "El beneficiario de Confirmación debe ser un feligrés.");
+            }
+
+            if (beneficiario.equals(acompanante)) {
+                throw new DatosInvalidosException(
+                        "El beneficiario no puede ser su propio padrino o madrina.");
+            }
+
+            if (sacerdote.equals(acompanante)) {
+                throw new DatosInvalidosException(
+                        "El sacerdote encargado no puede ser padrino o madrina.");
+            }
+
+            return SacramentoFactory.crear(
+                    "confirmación",
+                    beneficiario,
+                    sacerdote,
+                    fecha,
+                    costo,
+                    acompanante);
+        }
+
         int cuposTotales = cuposTotalesParaRetiro(fecha);
 
         if (!(beneficiario instanceof Feligres)) {
@@ -501,7 +743,6 @@ public class VentanaPrincipal extends JFrame {
 
         if (repositorio.capacidadRetiroEn(fecha) != null
                 && repositorio.cuposDisponiblesRetiroEn(fecha) <= 0) {
-
             throw new DatosInvalidosException(
                     "No hay cupos disponibles para el retiro de esa fecha.");
         }
@@ -514,41 +755,58 @@ public class VentanaPrincipal extends JFrame {
                 costo,
                 cuposTotales);
     }
+
     private int cuposTotalesParaRetiro(LocalDate fecha) {
         Integer capacidadExistente = repositorio.capacidadRetiroEn(fecha);
+
         if (capacidadExistente != null) {
             return capacidadExistente;
         }
+
         return Integer.parseInt(txtCupos.getText().trim());
     }
 
     private void alGenerarReportePorTipo(ActionEvent evento) {
         String tipoUi = (String) comboTipoSacramento.getSelectedItem();
         String tipoFiltro = tipoFiltroDe(tipoUi);
-        Reportes.ReporteTipo reporte = Reportes.generarReportePorTipo(repositorio.getInscripciones(), tipoFiltro);
+
+        Reportes.ReporteTipo reporte =
+                Reportes.generarReportePorTipo(repositorio.getInscripciones(), tipoFiltro);
+
         StringBuilder texto = new StringBuilder();
+
         texto.append("Reporte de ").append(tipoUi.toLowerCase())
                 .append(" - cantidad: ").append(reporte.cantidad()).append("\n");
+
         for (String linea : reporte.detalle()) {
             texto.append(" - ").append(linea).append("\n");
         }
+
         texto.append("Total recaudado en ").append(tipoUi.toLowerCase())
                 .append(": S/ ").append(String.format("%.2f", reporte.totalRecaudado()));
+
         areaResultado.setText(texto.toString());
     }
 
     private void alCalcularTotal(ActionEvent evento) {
         double total = Reportes.calcularTotalRecaudado(repositorio.getInscripciones());
-        areaResultado.setText(String.format("Total recaudado (todas las inscripciones): S/ %.2f", total));
+
+        areaResultado.setText(
+                String.format("Total recaudado (todas las inscripciones): S/ %.2f", total));
     }
 
     private void alGuardarRespaldo(ActionEvent evento) {
         try {
             var ruta = repositorio.guardarRespaldo("respaldo_parroquia.txt");
-            areaResultado.setText("Respaldo guardado en: " + ruta.toAbsolutePath());
+
+            areaResultado.setText(
+                    "Respaldo guardado en: " + ruta.toAbsolutePath());
+
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "No se pudo guardar el respaldo: " + ex.getMessage(),
-                    "Error de escritura", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo guardar el respaldo: " + ex.getMessage(),
+                    "Error de escritura",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -561,7 +819,6 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private void actualizarCombosDePersonas() {
-
         comboBeneficiario.removeAllItems();
         comboCampoExtra1.removeAllItems();
         comboCampoExtra2.removeAllItems();
@@ -573,15 +830,12 @@ public class VentanaPrincipal extends JFrame {
         comboCampoExtra3.addItem("-- Ninguno --");
 
         for (String clave : personasPorClave.keySet()) {
-
             Persona persona = personasPorClave.get(clave);
 
-             
-                comboBeneficiario.addItem(clave);
-                comboCampoExtra1.addItem(clave);
-                comboCampoExtra2.addItem(clave);
-                comboCampoExtra3.addItem(clave);
-         
+            comboBeneficiario.addItem(clave);
+            comboCampoExtra1.addItem(clave);
+            comboCampoExtra2.addItem(clave);
+            comboCampoExtra3.addItem(clave);
 
             if (persona instanceof Sacerdote) {
                 comboSacerdote.addItem(clave);
@@ -591,16 +845,24 @@ public class VentanaPrincipal extends JFrame {
 
     private void actualizarCamposSegunTipo() {
         String tipo = (String) comboTipoSacramento.getSelectedItem();
+
         boolean esBautizo = "Bautizo".equals(tipo);
         boolean esMatrimonio = "Matrimonio".equals(tipo);
         boolean esRetiro = "Retiro".equals(tipo);
+        boolean esPrimeraComunion = "Primera Comunión".equals(tipo);
+        boolean esConfirmacion = "Confirmación".equals(tipo);
 
-        lblCampoExtra1.setVisible(!esRetiro);
-        comboCampoExtra1.setVisible(!esRetiro);
-        lblCampoExtra2.setVisible(!esRetiro);
-        comboCampoExtra2.setVisible(!esRetiro);
+        boolean usaPadrino = esBautizo || esPrimeraComunion || esConfirmacion;
+
+        lblCampoExtra1.setVisible(usaPadrino || esMatrimonio);
+        comboCampoExtra1.setVisible(usaPadrino || esMatrimonio);
+
+        lblCampoExtra2.setVisible(esBautizo || esMatrimonio || esPrimeraComunion);
+        comboCampoExtra2.setVisible(esBautizo || esMatrimonio || esPrimeraComunion);
+
         lblCampoExtra3.setVisible(esMatrimonio);
         comboCampoExtra3.setVisible(esMatrimonio);
+
         lblCupos.setVisible(esRetiro);
         txtCupos.setVisible(esRetiro);
         lblCuposDetalle.setVisible(esRetiro);
@@ -609,11 +871,22 @@ public class VentanaPrincipal extends JFrame {
             lblCampoExtra1.setText("Padrino:");
             lblCampoExtra2.setText("Madrina:");
             txtCosto.setText("80.0");
+
         } else if (esMatrimonio) {
             lblCampoExtra1.setText("Contrayente:");
             lblCampoExtra2.setText("Testigo 1:");
             lblCampoExtra3.setText("Testigo 2:");
             txtCosto.setText("350.0");
+
+        } else if (esPrimeraComunion) {
+            lblCampoExtra1.setText("Padrino:");
+            lblCampoExtra2.setText("Madrina:");
+            txtCosto.setText("80.0");
+
+        } else if (esConfirmacion) {
+            lblCampoExtra1.setText("Padrino/Madrina:");
+            txtCosto.setText("80.0");
+
         } else {
             txtCosto.setText("45.0");
             actualizarCuposDisponibles();
@@ -621,28 +894,36 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private void actualizarCuposDisponibles() {
-        if (comboTipoSacramento == null || !"Retiro".equals(comboTipoSacramento.getSelectedItem())) {
+        if (comboTipoSacramento == null
+                || !"Retiro".equals(comboTipoSacramento.getSelectedItem())) {
             return;
         }
+
         LocalDate fecha = fechaProgramadaDesdeFormulario();
+
         if (fecha == null) {
             return;
         }
 
         Integer capacidad = repositorio.capacidadRetiroEn(fecha);
+
         if (capacidad == null) {
             boolean veniaDeRetiroExistente = !txtCupos.isEditable();
+
             txtCupos.setEditable(true);
             lblCupos.setText("Cupos totales:");
             lblCuposDetalle.setText("Aun no hay inscritos");
+
             if (veniaDeRetiroExistente) {
                 txtCupos.setText("40");
             }
+
             return;
         }
 
         int disponibles = repositorio.cuposDisponiblesRetiroEn(fecha);
         int ocupados = repositorio.cuposOcupadosRetiroEn(fecha);
+
         txtCupos.setText(String.valueOf(disponibles));
         txtCupos.setEditable(false);
         lblCupos.setText("Cupos disponibles:");
@@ -652,7 +933,9 @@ public class VentanaPrincipal extends JFrame {
     private LocalDate fechaProgramadaDesdeFormulario() {
         try {
             int dias = Integer.parseInt(txtDiasParaFecha.getText().trim());
+
             return LocalDate.now().plusDays(dias);
+
         } catch (NumberFormatException ex) {
             return null;
         }
@@ -662,9 +945,19 @@ public class VentanaPrincipal extends JFrame {
         if ("Matrimonio".equals(tipoUi)) {
             return "matrimonio";
         }
+
         if ("Retiro".equals(tipoUi)) {
             return "retiro";
         }
+
+        if ("Primera Comunión".equals(tipoUi)) {
+            return "primera comunión";
+        }
+
+        if ("Confirmación".equals(tipoUi)) {
+            return "confirmación";
+        }
+
         return "bautizo";
     }
 

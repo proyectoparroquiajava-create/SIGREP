@@ -9,7 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public final class RepositorioDatos {
 
     private static RepositorioDatos instancia;
@@ -29,7 +28,6 @@ public final class RepositorioDatos {
         return instancia;
     }
 
- 
     public static synchronized void reiniciarInstancia() {
         instancia = null;
     }
@@ -41,19 +39,45 @@ public final class RepositorioDatos {
         personas.put(persona.getDni(), persona);
     }
 
+    public void actualizarPersona(String dniAnterior, Persona personaActualizada) {
+        if (!personas.containsKey(dniAnterior)) {
+            throw new RegistroNoEncontradoException("No existe una persona registrada con ese DNI.");
+        }
+
+        if (!dniAnterior.equals(personaActualizada.getDni())
+                && personas.containsKey(personaActualizada.getDni())) {
+            throw new RegistroDuplicadoException("Ya existe una persona registrada con el nuevo DNI.");
+        }
+
+        personas.remove(dniAnterior);
+        personas.put(personaActualizada.getDni(), personaActualizada);
+    }
+
+    public void eliminarPersona(String dni) {
+        if (!personas.containsKey(dni)) {
+            throw new RegistroNoEncontradoException("No existe una persona registrada con ese DNI.");
+        }
+
+        personas.remove(dni);
+    }
+
     public Persona buscarPersona(String dni) {
         Persona persona = personas.get(dni);
+
         if (persona == null) {
             throw new RegistroNoEncontradoException("No existe ninguna persona con ese DNI.");
         }
+
         return persona;
     }
 
     public void registrarInscripcion(Inscripcion inscripcion) {
         Sacramento sacramento = inscripcion.getSacramento();
+
         if (sacramento instanceof Retiro retiro) {
             validarCupoDeRetiro(retiro);
         }
+
         inscripciones.add(inscripcion);
     }
 
@@ -77,30 +101,37 @@ public final class RepositorioDatos {
 
     public int cuposDisponiblesRetiroEn(LocalDate fecha) {
         Integer capacidad = capacidadRetiroEn(fecha);
+
         if (capacidad == null) {
             return 0;
         }
+
         return Math.max(0, capacidad - cuposOcupadosRetiroEn(fecha));
     }
 
     private void validarCupoDeRetiro(Retiro retiro) {
         LocalDate fecha = retiro.getFechaProgramada();
         String dni = retiro.getBeneficiario().getDni();
+
         boolean yaInscrito = inscripcionesRetiroEn(fecha).stream()
                 .anyMatch(i -> i.getSacramento().getBeneficiario().getDni().equals(dni));
+
         if (yaInscrito) {
             throw new RegistroDuplicadoException(
                     "Esa persona ya esta inscrita en el retiro de la fecha " + fecha + ".");
         }
 
         Integer capacidad = capacidadRetiroEn(fecha);
+
         if (capacidad == null) {
             return;
         }
+
         if (retiro.getCuposTotales() != capacidad) {
             throw new DatosInvalidosException(
                     "El retiro del " + fecha + " ya fue abierto con " + capacidad + " cupos.");
         }
+
         if (cuposOcupadosRetiroEn(fecha) >= capacidad) {
             throw new DatosInvalidosException(
                     "No hay cupos disponibles para el retiro del " + fecha + ".");
@@ -115,17 +146,20 @@ public final class RepositorioDatos {
         return personas.size();
     }
 
- 
     public Path guardarRespaldo(String ruta) throws IOException {
         StringBuilder contenido = new StringBuilder();
+
         contenido.append("Respaldo de inscripciones - Parroquia Sagrada Familia").append(System.lineSeparator());
         contenido.append("Total de personas registradas: ").append(getTotalPersonas()).append(System.lineSeparator());
         contenido.append("-----------------------------------------------------").append(System.lineSeparator());
+
         for (Inscripcion inscripcion : inscripciones) {
             contenido.append(inscripcion.aLineaTexto()).append(System.lineSeparator());
         }
+
         Path path = Path.of(ruta);
         Files.writeString(path, contenido.toString());
+
         return path;
     }
 }
