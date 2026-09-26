@@ -1,6 +1,15 @@
 package parroquia;
 
 import javax.swing.*;
+import java.util.Properties;
+
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -12,8 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.awt.event.ActionListener;
 
-public class VentanaPrincipal extends JFrame {
+public class VentanaPrincipal extends JFrame implements ActionListener {
 
     private final RepositorioDatos repositorio = RepositorioDatos.getInstancia();
     private final Map<String, Persona> personasPorClave = new HashMap<>();
@@ -46,6 +56,9 @@ public class VentanaPrincipal extends JFrame {
     private JTextField txtHora;
 
     private JTextArea areaResultado;
+    private JMenuBar menuBar;
+    private JMenu mnNewMenu;
+    private JMenuItem mntmNewMenuItem;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -62,6 +75,18 @@ public class VentanaPrincipal extends JFrame {
         setTitle("SIGREP(Sistema Integrado De Gestion de Registros Parroquiales)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1092, 650);
+        {
+        	menuBar = new JMenuBar();
+        	setJMenuBar(menuBar);
+        	{
+        		mnNewMenu = new JMenu("Acerca de ");
+        		menuBar.add(mnNewMenu);
+        		
+        		mntmNewMenuItem = new JMenuItem("Equipo de desarrollo");
+        		mntmNewMenuItem.addActionListener(this);
+        		mnNewMenu.add(mntmNewMenuItem);
+        	}
+        }
 
         contentPane = new JPanel();
         contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -888,6 +913,7 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private void alGenerarReportePorTipo(ActionEvent evento) {
+
         String tipoUi =
                 (String) comboTipoSacramento.getSelectedItem();
 
@@ -921,10 +947,100 @@ public class VentanaPrincipal extends JFrame {
                         "%.2f",
                         reporte.totalRecaudado()));
 
-        areaResultado.setText(
-                texto.toString());
-    }
+        areaResultado.setText(texto.toString());
 
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Desea enviar una copia del reporte al correo?",
+                "Enviar reporte",
+                JOptionPane.YES_NO_OPTION);
+
+        if (opcion == JOptionPane.YES_OPTION) {
+
+            String correoDestino = JOptionPane.showInputDialog(
+                    this,
+                    "Ingrese el correo electrónico:");
+
+            if (correoDestino == null) {
+                return;
+            }
+
+            correoDestino = correoDestino.trim();
+
+            if (correoDestino.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debe ingresar un correo electrónico.",
+                        "Correo vacío",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            enviarReportePorCorreo(
+                    correoDestino,
+                    "Reporte SIGREP - " + tipoUi,
+                    texto.toString());
+        }
+    }
+    private void enviarReportePorCorreo(
+            String correoDestino,
+            String asunto,
+            String contenido) {
+
+        final String CORREO = "proyectoparroquia.java@gmail.com";   
+        final String CLAVE_APP = "jvxdgbbnlvbosrrb";
+
+        try {
+
+            Properties propiedades = new Properties();
+
+            propiedades.put("mail.smtp.auth", "true");
+            propiedades.put("mail.smtp.starttls.enable", "true");
+            propiedades.put("mail.smtp.host", "smtp.gmail.com");
+            propiedades.put("mail.smtp.port", "587");
+
+            Session sesion = Session.getInstance(
+                    propiedades,
+                    new Authenticator() {
+
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(
+                                    CORREO,
+                                    CLAVE_APP);
+                        }
+                    });
+
+            Message mensaje = new MimeMessage(sesion);
+
+            mensaje.setFrom(new InternetAddress(CORREO));
+
+            mensaje.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(correoDestino));
+
+            mensaje.setSubject(asunto);
+            mensaje.setText(contenido);
+
+            Transport.send(mensaje);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El reporte fue enviado correctamente al correo:\n"
+                            + correoDestino,
+                    "Correo enviado",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo enviar el reporte por correo.\n"
+                            + ex.getMessage(),
+                    "Error al enviar",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
     private void alCalcularTotal(ActionEvent evento) {
         double total =
                 Reportes.calcularTotalRecaudado(
@@ -1158,4 +1274,13 @@ public class VentanaPrincipal extends JFrame {
         txtTelefono.setText("");
         txtDireccionCargo.setText("");
     }
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmNewMenuItem) {
+			do_mntmNewMenuItem_actionPerformed(e);
+		}
+	}
+	protected void do_mntmNewMenuItem_actionPerformed(ActionEvent e) {
+		EquipoDesarrollo equipo = new EquipoDesarrollo();
+	    equipo.setVisible(true);
+	}
 }
