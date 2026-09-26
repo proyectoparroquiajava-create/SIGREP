@@ -141,6 +141,20 @@ public class VentanaPrincipal extends JFrame {
         };
 
         tablaPersonas = new JTable(modeloTabla);
+        
+        tablaPersonas.getColumnModel().getColumn(2).setCellRenderer(
+        	    new javax.swing.table.DefaultTableCellRenderer() {
+        	        @Override
+        	        protected void setValue(Object value) {
+        	            if (value != null && value.toString().length() == 8) {
+        	                String dni = value.toString();
+        	                setText(dni.substring(0, 3) + "*****");
+        	            } else {
+        	                setText("");
+        	            }
+        	        }
+        	    }
+        	);
 
         JScrollPane scrollTabla = new JScrollPane(tablaPersonas);
         scrollTabla.setBounds(380, 39, 470, 115);
@@ -308,8 +322,8 @@ public class VentanaPrincipal extends JFrame {
 
         JLabel lblNewLabel = new JLabel("imagen");
         lblNewLabel.setIcon(
-                new ImageIcon(VentanaPrincipal.class.getResource("/imagen/imagen 3.jpeg")));
-        lblNewLabel.setBounds(654, 310, 196, 176);
+                new ImageIcon(VentanaPrincipal.class.getResource("/imagen/IMAGEN.png")));
+        lblNewLabel.setBounds(532, 310, 341, 158);
         contentPane.add(lblNewLabel);
     }
 
@@ -320,6 +334,14 @@ public class VentanaPrincipal extends JFrame {
             String telefono = txtTelefono.getText().trim();
             String direccionCargo = txtDireccionCargo.getText().trim();
             String rol = (String) comboRol.getSelectedItem();
+            
+            if (nombre.isEmpty() || dni.isEmpty() || telefono.isEmpty() || direccionCargo.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No puede haber campos vacíos. Complete todos los datos.",
+                        "Campos incompletos",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
             Persona nuevaPersona = "Feligres".equals(rol)
                     ? new Feligres(nombre, dni, telefono, direccionCargo)
@@ -534,12 +556,27 @@ public class VentanaPrincipal extends JFrame {
 
             double costo = Double.parseDouble(
                     txtCosto.getText().trim());
+            
+            if (txtFecha.getText().trim().isEmpty() || txtHora.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "La fecha y la hora son campos obligatorios.",
+                        "Campos vacíos",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
             LocalDate fecha = LocalDate.parse(
                     txtFecha.getText().trim());
 
             LocalTime hora = LocalTime.parse(
                     txtHora.getText().trim());
+            if (fecha.isBefore(LocalDate.now())) {
+                JOptionPane.showMessageDialog(this,
+                        "La fecha ingresada no puede ser anterior a la fecha actual.",
+                        "Fecha no válida",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
             String tipoUi =
                     (String) comboTipoSacramento.getSelectedItem();
@@ -589,13 +626,13 @@ public class VentanaPrincipal extends JFrame {
         } catch (ClassCastException ex) {
             JOptionPane.showMessageDialog(this,
                     "El beneficiario seleccionado no corresponde al tipo requerido.",
-                    "Error de validacion",
+                    "Error de validación",
                     JOptionPane.ERROR_MESSAGE);
 
         } catch (Exception error) {
             JOptionPane.showMessageDialog(this,
-                    error.getMessage(),
-                    "Error de validacion",
+            		"Verifique que la fecha y la hora tengan el formato correcto.",
+                    "Error de validación",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
