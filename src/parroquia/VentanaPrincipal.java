@@ -60,17 +60,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private JMenu mnNewMenu;
     private JMenuItem mntmNewMenuItem;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                VentanaPrincipal frame = new VentanaPrincipal();
-                frame.setVisible(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-    }
-
+   
     public VentanaPrincipal() {
         setTitle("SIGREP(Sistema Integrado De Gestion de Registros Parroquiales)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

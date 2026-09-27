@@ -14,7 +14,7 @@ public class Bienvenida extends JFrame {
         setSize(1200, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null);
+        getContentPane().setLayout(null);
 
         ImageIcon imagenOriginal = new ImageIcon(
                 getClass().getResource("/imagen/bienvenida.jpeg"));
@@ -25,7 +25,7 @@ public class Bienvenida extends JFrame {
         JLabel lblFondo = new JLabel(new ImageIcon(imagenEscalada));
         lblFondo.setBounds(0, 0, 1200, 700);
         JButton btnIniciar = new JButton();
-        btnIniciar.setBounds(350, 400, 500, 100);
+        btnIniciar.setBounds(350, 444, 500, 100);
         btnIniciar.setOpaque(false);
         btnIniciar.setContentAreaFilled(false);
         btnIniciar.setBorderPainted(false);
@@ -37,8 +37,8 @@ public class Bienvenida extends JFrame {
             dispose();
         });
 
-        add(btnIniciar);
-        add(lblFondo);
+        getContentPane().add(btnIniciar);
+        getContentPane().add(lblFondo);
 
     }
 
