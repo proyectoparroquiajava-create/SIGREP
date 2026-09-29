@@ -1,6 +1,13 @@
 package parroquia;
 
 import javax.swing.*;
+import java.io.File;
+
+
+import jakarta.mail.BodyPart;
+import jakarta.mail.Multipart;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 import jakarta.mail.Authenticator;
@@ -241,7 +248,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             }
         });
         contentPane.add(txtFecha);
-
+        
         JLabel lblHora = new JLabel("Hora (HH:mm):");
         lblHora.setBounds(10, 360, 100, 14);
         contentPane.add(lblHora);
@@ -327,8 +334,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         btnGuardarRespaldo.setBounds(380, 461, 142, 28);
         btnGuardarRespaldo.addActionListener(this::alGuardarRespaldo);
         contentPane.add(btnGuardarRespaldo);
+        
+        JButton btnCalendarioEventos = new JButton("Calendario de eventos");
+        btnCalendarioEventos.setBounds(532, 461, 180, 28);
 
-        areaResultado = new JTextArea();
+        btnCalendarioEventos.addActionListener(e -> {
+            Calendario.mostrarCalendario(repositorio.getInscripciones());
+        });
+
+        contentPane.add(btnCalendarioEventos);
+        areaResultado = new JTextArea();      
         areaResultado.setEditable(false);
 
         JScrollPane scrollResultado = new JScrollPane(areaResultado);
@@ -338,7 +353,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         JLabel lblNewLabel = new JLabel("imagen");
         lblNewLabel.setIcon(
                 new ImageIcon(VentanaPrincipal.class.getResource("/imagen/IMAGEN.png")));
-        lblNewLabel.setBounds(532, 310, 341, 158);
+        lblNewLabel.setBounds(532, 310, 341, 144);
         contentPane.add(lblNewLabel);
     }
 
@@ -646,7 +661,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         } catch (Exception error) {
             JOptionPane.showMessageDialog(this,
-            		"Verifique que la fecha y la hora tengan el formato correcto.",
+                    "Error real: " + error.getMessage(),
                     "Error de validación",
                     JOptionPane.ERROR_MESSAGE);
         }
@@ -938,44 +953,186 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                         reporte.totalRecaudado()));
 
         areaResultado.setText(texto.toString());
+        String archivoPDF = GeneradorPDF.generarReporte(
+                tipoUi,
+                repositorio.getInscripciones());
 
         int opcion = JOptionPane.showConfirmDialog(
                 this,
-                "¿Desea enviar una copia del reporte al correo?",
+                "¿Desea enviar el reporte por correo?",
                 "Enviar reporte",
                 JOptionPane.YES_NO_OPTION);
 
         if (opcion == JOptionPane.YES_OPTION) {
 
-            String correoDestino = JOptionPane.showInputDialog(
+            Object[] opciones = {"Feligrés", "Parroquia"};
+
+            int destino = JOptionPane.showOptionDialog(
                     this,
-                    "Ingrese el correo electrónico:");
+                    "¿A quién desea enviar el reporte?",
+                    "Destino del reporte",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]);
 
-            if (correoDestino == null) {
-                return;
-            }
+            if (destino == 0) {
 
-            correoDestino = correoDestino.trim();
+                // Guardar las inscripciones del sacramento seleccionado
+                java.util.List<Inscripcion> inscripcionesEncontradas =
+                        new java.util.ArrayList<>();
 
-            if (correoDestino.isEmpty()) {
-                JOptionPane.showMessageDialog(
+                for (Inscripcion inscripcion : repositorio.getInscripciones()) {
+
+                    Sacramento sacramento =
+                            inscripcion.getSacramento();
+
+                    if (sacramento.tipo().equalsIgnoreCase(tipoUi)) {
+
+                        inscripcionesEncontradas.add(inscripcion);
+                    }
+                }
+
+                // Si no hay inscripciones
+                if (inscripcionesEncontradas.isEmpty()) {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "No hay inscripciones registradas de "
+                                    + tipoUi + ".");
+
+                    return;
+                }
+
+                // Panel donde aparecerán los beneficiarios y sus correos
+                JPanel panelCorreos = new JPanel();
+
+                panelCorreos.setLayout(
+                        new BoxLayout(
+                                panelCorreos,
+                                BoxLayout.Y_AXIS));
+
+                JLabel mensaje = new JLabel(
+                        "Se encontraron "
+                                + inscripcionesEncontradas.size()
+                                + " inscripciones de "
+                                + tipoUi
+                                + ".");
+
+                panelCorreos.add(mensaje);
+                panelCorreos.add(Box.createVerticalStrut(10));
+
+                // Un campo de correo para cada inscripción
+                JTextField[] camposCorreos =
+                        new JTextField[
+                                inscripcionesEncontradas.size()];
+
+                for (int i = 0;
+                        i < inscripcionesEncontradas.size();
+                        i++) {
+
+                    Inscripcion inscripcion =
+                            inscripcionesEncontradas.get(i);
+
+                    Persona persona =
+                            inscripcion.getSacramento()
+                                    .getBeneficiario();
+
+                    String dniOculto =
+                            persona.getDni().substring(0, 3)
+                                    + "*****";
+
+                    JLabel beneficiario = new JLabel(
+                            (i + 1)
+                                    + ". "
+                                    + persona.getNombreCompleto()
+                                    + " - DNI "
+                                    + dniOculto);
+
+                    camposCorreos[i] =
+                            new JTextField(25);
+
+                    panelCorreos.add(beneficiario);
+                    panelCorreos.add(
+                            new JLabel("Correo electrónico:"));
+
+                    panelCorreos.add(camposCorreos[i]);
+
+                    panelCorreos.add(
+                            Box.createVerticalStrut(12));
+                }
+
+                // Mostrar todos juntos
+                int respuesta = JOptionPane.showConfirmDialog(
                         this,
-                        "Debe ingresar un correo electrónico.",
-                        "Correo vacío",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+                        panelCorreos,
+                        "Enviar comprobantes - " + tipoUi,
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE);
 
-            enviarReportePorCorreo(
-                    correoDestino,
-                    "Reporte SIGREP - " + tipoUi,
-                    texto.toString());
+                if (respuesta != JOptionPane.OK_OPTION) {
+                    return;
+                }
+
+                // Revisar que todos tengan correo
+                for (int i = 0;
+                        i < camposCorreos.length;
+                        i++) {
+
+                    if (camposCorreos[i]
+                            .getText()
+                            .trim()
+                            .isEmpty()) {
+
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "Debe ingresar el correo de todos los feligreses.");
+
+                        return;
+                    }
+                }
+
+                // Generar y enviar un comprobante para cada persona
+                for (int i = 0;
+                        i < inscripcionesEncontradas.size();
+                        i++) {
+
+                    Inscripcion inscripcion =
+                            inscripcionesEncontradas.get(i);
+
+                    String correo =
+                            camposCorreos[i]
+                                    .getText()
+                                    .trim();
+
+                    String comprobantePDF =
+                            GeneradorPDF.generarComprobante(
+                                    inscripcion);
+
+                    enviarReportePorCorreo(
+                            correo,
+                            "Comprobante de inscripción SIGREP - "
+                                    + tipoUi,
+                            comprobantePDF);
+                }
+            }
+            if (destino == 1) {
+
+                enviarReportePorCorreo(
+                        "proyectoparroquia.java@gmail.com",
+                        "Reporte SIGREP - " + tipoUi,
+                        archivoPDF);
+            }
         }
+        
+
+       
     }
     private void enviarReportePorCorreo(
             String correoDestino,
             String asunto,
-            String contenido) {
+            String archivoPDF) {
 
         final String CORREO = "proyectoparroquia.java@gmail.com";   
         final String CLAVE_APP = "jvxdgbbnlvbosrrb";
@@ -1010,7 +1167,25 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     InternetAddress.parse(correoDestino));
 
             mensaje.setSubject(asunto);
-            mensaje.setText(contenido);
+            BodyPart textoCorreo = new MimeBodyPart();
+            textoCorreo.setText(
+                    "Estimado(a):\n\n"
+                    + "Adjuntamos el reporte generado por SIGREP.\n\n"
+                    + "Parroquia Sagrada Familia.");
+
+            BodyPart adjunto = new MimeBodyPart();
+            adjunto.setDataHandler(
+                    new jakarta.activation.DataHandler(
+                            new jakarta.activation.FileDataSource(archivoPDF)));
+
+            adjunto.setFileName(
+                    new File(archivoPDF).getName());
+
+            Multipart contenidoCorreo = new MimeMultipart();
+            contenidoCorreo.addBodyPart(textoCorreo);
+            contenidoCorreo.addBodyPart(adjunto);
+
+            mensaje.setContent(contenidoCorreo);
 
             Transport.send(mensaje);
 
@@ -1263,7 +1438,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         txtDni.setText("");
         txtTelefono.setText("");
         txtDireccionCargo.setText("");
-    }
+    } 
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == mntmNewMenuItem) {
 			do_mntmNewMenuItem_actionPerformed(e);
