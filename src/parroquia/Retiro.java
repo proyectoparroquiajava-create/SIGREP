@@ -27,7 +27,7 @@ public class Retiro extends Sacramento {
 
     @Override
     public String tipo() {
-        return "Retiro espiritual";
+        return "Retiro";
     }
 
     @Override

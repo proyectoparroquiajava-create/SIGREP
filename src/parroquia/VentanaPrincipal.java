@@ -1,8 +1,7 @@
-package parroquia;
+ package parroquia;
 
 import javax.swing.*;
 import java.io.File;
-
 
 import jakarta.mail.BodyPart;
 import jakarta.mail.Multipart;
@@ -67,22 +66,21 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private JMenu mnNewMenu;
     private JMenuItem mntmNewMenuItem;
 
-   
     public VentanaPrincipal() {
         setTitle("SIGREP(Sistema Integrado De Gestion de Registros Parroquiales)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1092, 650);
         {
-        	menuBar = new JMenuBar();
-        	setJMenuBar(menuBar);
-        	{
-        		mnNewMenu = new JMenu("Acerca de ");
-        		menuBar.add(mnNewMenu);
-        		
-        		mntmNewMenuItem = new JMenuItem("Equipo de desarrollo");
-        		mntmNewMenuItem.addActionListener(this);
-        		mnNewMenu.add(mntmNewMenuItem);
-        	}
+            menuBar = new JMenuBar();
+            setJMenuBar(menuBar);
+            {
+                mnNewMenu = new JMenu("Acerca de ");
+                menuBar.add(mnNewMenu);
+
+                mntmNewMenuItem = new JMenuItem("Equipo de desarrollo");
+                mntmNewMenuItem.addActionListener(this);
+                mnNewMenu.add(mntmNewMenuItem);
+            }
         }
 
         contentPane = new JPanel();
@@ -103,19 +101,19 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         contentPane.add(lblTitulo1);
 
         JLabel lblNombre = new JLabel("Nombre completo:");
-        lblNombre.setBounds(10, 40, 120, 14);
+        lblNombre.setBounds(10, 65, 120, 14);
         contentPane.add(lblNombre);
 
         txtNombre = new JTextField();
-        txtNombre.setBounds(140, 37, 200, 20);
+        txtNombre.setBounds(140, 62, 200, 20);
         contentPane.add(txtNombre);
 
         JLabel lblDni = new JLabel("DNI (8 digitos):");
-        lblDni.setBounds(10, 65, 120, 14);
+        lblDni.setBounds(10, 41, 120, 14);
         contentPane.add(lblDni);
 
         txtDni = new JTextField();
-        txtDni.setBounds(140, 62, 200, 20);
+        txtDni.setBounds(140, 38, 200, 20);
         contentPane.add(txtDni);
 
         JLabel lblTelefono = new JLabel("Telefono:");
@@ -163,20 +161,20 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         };
 
         tablaPersonas = new JTable(modeloTabla);
-        
+
         tablaPersonas.getColumnModel().getColumn(2).setCellRenderer(
-        	    new javax.swing.table.DefaultTableCellRenderer() {
-        	        @Override
-        	        protected void setValue(Object value) {
-        	            if (value != null && value.toString().length() == 8) {
-        	                String dni = value.toString();
-        	                setText(dni.substring(0, 3) + "*****");
-        	            } else {
-        	                setText("");
-        	            }
-        	        }
-        	    }
-        	);
+                new javax.swing.table.DefaultTableCellRenderer() {
+                    @Override
+                    protected void setValue(Object value) {
+                        if (value != null && value.toString().length() == 8) {
+                            String dni = value.toString();
+                            setText(dni.substring(0, 3) + "*****");
+                        } else {
+                            setText("");
+                        }
+                    }
+                }
+        );
 
         JScrollPane scrollTabla = new JScrollPane(tablaPersonas);
         scrollTabla.setBounds(380, 39, 470, 115);
@@ -248,7 +246,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             }
         });
         contentPane.add(txtFecha);
-        
+
         JLabel lblHora = new JLabel("Hora (HH:mm):");
         lblHora.setBounds(10, 360, 100, 14);
         contentPane.add(lblHora);
@@ -334,7 +332,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         btnGuardarRespaldo.setBounds(380, 461, 142, 28);
         btnGuardarRespaldo.addActionListener(this::alGuardarRespaldo);
         contentPane.add(btnGuardarRespaldo);
-        
+
         JButton btnCalendarioEventos = new JButton("Calendario de eventos");
         btnCalendarioEventos.setBounds(532, 461, 180, 28);
 
@@ -343,7 +341,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         });
 
         contentPane.add(btnCalendarioEventos);
-        areaResultado = new JTextArea();      
+        areaResultado = new JTextArea();
         areaResultado.setEditable(false);
 
         JScrollPane scrollResultado = new JScrollPane(areaResultado);
@@ -364,8 +362,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             String telefono = txtTelefono.getText().trim();
             String direccionCargo = txtDireccionCargo.getText().trim();
             String rol = (String) comboRol.getSelectedItem();
-            
-            if (nombre.isEmpty() || dni.isEmpty() || telefono.isEmpty() || direccionCargo.isEmpty()) {
+
+            if (nombre.isEmpty() || dni.isEmpty() || telefono.isEmpty()
+                    || ("Feligres".equals(rol) && direccionCargo.isEmpty())) {
                 JOptionPane.showMessageDialog(this,
                         "No puede haber campos vacíos. Complete todos los datos.",
                         "Campos incompletos",
@@ -375,7 +374,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
             Persona nuevaPersona = "Feligres".equals(rol)
                     ? new Feligres(nombre, dni, telefono, direccionCargo)
-                    : new Sacerdote(nombre, dni, telefono, direccionCargo);
+                    : new Sacerdote(nombre, dni, telefono);
 
             repositorio.registrarPersona(nuevaPersona);
             personasPorClave.put(claveDe(nuevaPersona), nuevaPersona);
@@ -457,7 +456,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                         nuevoNombre, nuevoDni, nuevoTelefono, nuevaDireccion);
             } else {
                 personaActualizada = new Sacerdote(
-                        nuevoNombre, nuevoDni, nuevoTelefono, nuevaDireccion);
+                        nuevoNombre, nuevoDni, nuevoTelefono);
             }
 
             repositorio.actualizarPersona(dniActual, personaActualizada);
@@ -586,7 +585,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
             double costo = Double.parseDouble(
                     txtCosto.getText().trim());
-            
+
             if (txtFecha.getText().trim().isEmpty() || txtHora.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                         "La fecha y la hora son campos obligatorios.",
@@ -600,6 +599,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
             LocalTime hora = LocalTime.parse(
                     txtHora.getText().trim());
+
             if (fecha.isBefore(LocalDate.now())) {
                 JOptionPane.showMessageDialog(this,
                         "La fecha ingresada no puede ser anterior a la fecha actual.",
@@ -632,11 +632,11 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
             String texto =
                     "Inscripcion creada.\n"
-                    + inscripcion.aLineaTexto()
-                    + "\nRecibo emitido: "
-                    + recibo.numero()
-                    + " por S/ "
-                    + String.format("%.2f", recibo.monto());
+                            + inscripcion.aLineaTexto()
+                            + "\nRecibo emitido: "
+                            + recibo.numero()
+                            + " por S/ "
+                            + String.format("%.2f", recibo.monto());
 
             if (sacramento instanceof Retiro) {
                 texto += "\nCupos disponibles en esa fecha: "
@@ -953,6 +953,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                         reporte.totalRecaudado()));
 
         areaResultado.setText(texto.toString());
+
         String archivoPDF = GeneradorPDF.generarReporte(
                 tipoUi,
                 repositorio.getInscripciones());
@@ -979,7 +980,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
             if (destino == 0) {
 
-                // Guardar las inscripciones del sacramento seleccionado
                 java.util.List<Inscripcion> inscripcionesEncontradas =
                         new java.util.ArrayList<>();
 
@@ -988,13 +988,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     Sacramento sacramento =
                             inscripcion.getSacramento();
 
-                    if (sacramento.tipo().equalsIgnoreCase(tipoUi)) {
+                    if (sacramento.tipo().toLowerCase().contains(tipoFiltroDe(tipoUi))) {
 
                         inscripcionesEncontradas.add(inscripcion);
                     }
                 }
 
-                // Si no hay inscripciones
                 if (inscripcionesEncontradas.isEmpty()) {
 
                     JOptionPane.showMessageDialog(
@@ -1005,7 +1004,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     return;
                 }
 
-                // Panel donde aparecerán los beneficiarios y sus correos
                 JPanel panelCorreos = new JPanel();
 
                 panelCorreos.setLayout(
@@ -1023,14 +1021,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                 panelCorreos.add(mensaje);
                 panelCorreos.add(Box.createVerticalStrut(10));
 
-                // Un campo de correo para cada inscripción
                 JTextField[] camposCorreos =
                         new JTextField[
                                 inscripcionesEncontradas.size()];
 
                 for (int i = 0;
-                        i < inscripcionesEncontradas.size();
-                        i++) {
+                     i < inscripcionesEncontradas.size();
+                     i++) {
 
                     Inscripcion inscripcion =
                             inscripcionesEncontradas.get(i);
@@ -1063,7 +1060,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                             Box.createVerticalStrut(12));
                 }
 
-                // Mostrar todos juntos
                 int respuesta = JOptionPane.showConfirmDialog(
                         this,
                         panelCorreos,
@@ -1075,10 +1071,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     return;
                 }
 
-                // Revisar que todos tengan correo
                 for (int i = 0;
-                        i < camposCorreos.length;
-                        i++) {
+                     i < camposCorreos.length;
+                     i++) {
 
                     if (camposCorreos[i]
                             .getText()
@@ -1093,10 +1088,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     }
                 }
 
-                // Generar y enviar un comprobante para cada persona
                 for (int i = 0;
-                        i < inscripcionesEncontradas.size();
-                        i++) {
+                     i < inscripcionesEncontradas.size();
+                     i++) {
 
                     Inscripcion inscripcion =
                             inscripcionesEncontradas.get(i);
@@ -1117,6 +1111,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                             comprobantePDF);
                 }
             }
+
             if (destino == 1) {
 
                 enviarReportePorCorreo(
@@ -1125,16 +1120,15 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                         archivoPDF);
             }
         }
-        
-
-       
     }
+
     private void enviarReportePorCorreo(
             String correoDestino,
             String asunto,
             String archivoPDF) {
 
-        final String CORREO = "proyectoparroquia.java@gmail.com";   
+        final String CORREO = "proyectoparroquia.java@gmail.com";
+
         final String CLAVE_APP = "jvxdgbbnlvbosrrb";
 
         try {
@@ -1167,13 +1161,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     InternetAddress.parse(correoDestino));
 
             mensaje.setSubject(asunto);
+
             BodyPart textoCorreo = new MimeBodyPart();
+
             textoCorreo.setText(
                     "Estimado(a):\n\n"
-                    + "Adjuntamos el reporte generado por SIGREP.\n\n"
-                    + "Parroquia Sagrada Familia.");
+                            + "Adjuntamos el reporte generado por SIGREP.\n\n"
+                            + "Parroquia Sagrada Familia.");
 
             BodyPart adjunto = new MimeBodyPart();
+
             adjunto.setDataHandler(
                     new jakarta.activation.DataHandler(
                             new jakarta.activation.FileDataSource(archivoPDF)));
@@ -1182,6 +1179,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     new File(archivoPDF).getName());
 
             Multipart contenidoCorreo = new MimeMultipart();
+
             contenidoCorreo.addBodyPart(textoCorreo);
             contenidoCorreo.addBodyPart(adjunto);
 
@@ -1206,6 +1204,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private void alCalcularTotal(ActionEvent evento) {
         double total =
                 Reportes.calcularTotalRecaudado(
@@ -1225,12 +1224,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
             areaResultado.setText(
                     "Respaldo guardado en: "
-                    + ruta.toAbsolutePath());
+                            + ruta.toAbsolutePath());
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
                     "No se pudo guardar el respaldo: "
-                    + ex.getMessage(),
+                            + ex.getMessage(),
                     "Error de escritura",
                     JOptionPane.ERROR_MESSAGE);
         }
@@ -1290,8 +1289,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         boolean usaPadrino =
                 esBautizo
-                || esPrimeraComunion
-                || esConfirmacion;
+                        || esPrimeraComunion
+                        || esConfirmacion;
 
         lblCampoExtra1.setVisible(
                 usaPadrino || esMatrimonio);
@@ -1301,13 +1300,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         lblCampoExtra2.setVisible(
                 esBautizo
-                || esMatrimonio
-                || esPrimeraComunion);
+                        || esMatrimonio
+                        || esPrimeraComunion);
 
         comboCampoExtra2.setVisible(
                 esBautizo
-                || esMatrimonio
-                || esPrimeraComunion);
+                        || esMatrimonio
+                        || esPrimeraComunion);
 
         lblCampoExtra3.setVisible(
                 esMatrimonio);
@@ -1399,8 +1398,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         lblCuposDetalle.setText(
                 ocupados
-                + " ocupado(s) de "
-                + capacidad);
+                        + " ocupado(s) de "
+                        + capacidad);
     }
 
     private LocalDate fechaProgramadaDesdeFormulario() {
@@ -1438,15 +1437,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         txtDni.setText("");
         txtTelefono.setText("");
         txtDireccionCargo.setText("");
-    } 
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == mntmNewMenuItem) {
-			do_mntmNewMenuItem_actionPerformed(e);
-		}
-	}
-	protected void do_mntmNewMenuItem_actionPerformed(ActionEvent e) {
-		EquipoDesarrollo equipo = new EquipoDesarrollo();
-	    equipo.setVisible(true);
-	}
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == mntmNewMenuItem) {
+            do_mntmNewMenuItem_actionPerformed(e);
+        }
+    }
+
+    protected void do_mntmNewMenuItem_actionPerformed(ActionEvent e) {
+        EquipoDesarrollo equipo = new EquipoDesarrollo();
+        equipo.setVisible(true);
+    }
 }
