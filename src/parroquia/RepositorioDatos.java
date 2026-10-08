@@ -58,17 +58,6 @@ public final class RepositorioDatos {
         }
         personas.remove(dni);
     }
-
-    public Persona buscarPersona(String dni) {
-        Persona persona = personas.get(dni);
-
-        if (persona == null) {
-            throw new RegistroNoEncontradoException("No existe ninguna persona con ese DNI.");
-        }
-
-        return persona;
-    }
-
     public void registrarInscripcion(Inscripcion inscripcion) {
         Sacramento sacramento = inscripcion.getSacramento();
 

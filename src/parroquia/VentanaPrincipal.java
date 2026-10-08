@@ -313,18 +313,18 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     }
 
     private void construirSeccionResultados() {
-        JLabel lblTitulo3 = new JLabel("3. Reportes (programacion funcional: filter, map, reduce)");
+        JLabel lblTitulo3 = new JLabel("3. Reportes ");
         lblTitulo3.setFont(new Font("Tahoma", Font.BOLD, 12));
         lblTitulo3.setBounds(10, 427, 450, 20);
         contentPane.add(lblTitulo3);
 
         JButton btnReporteTipo = new JButton("Reporte del tipo seleccionado");
-        btnReporteTipo.setBounds(10, 458, 190, 28);
+        btnReporteTipo.setBounds(10, 457, 190, 28);
         btnReporteTipo.addActionListener(this::alGenerarReportePorTipo);
         contentPane.add(btnReporteTipo);
 
         JButton btnTotalRecaudado = new JButton("Calcular total recaudado");
-        btnTotalRecaudado.setBounds(210, 458, 160, 28);
+        btnTotalRecaudado.setBounds(210, 457, 160, 28);
         btnTotalRecaudado.addActionListener(this::alCalcularTotal);
         contentPane.add(btnTotalRecaudado);
 
@@ -659,13 +659,32 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
                     "Error de validación",
                     JOptionPane.ERROR_MESSAGE);
 
-        } catch (Exception error) {
+        }  
+
+         catch (java.time.format.DateTimeParseException ex) {
             JOptionPane.showMessageDialog(this,
-                    "Error real: " + error.getMessage(),
+                    "La fecha (AAAA-MM-DD) o la hora (HH:mm) no tiene un formato válido.",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE);
+
+        } 
+
+         catch (ExcepcionSistemaParroquial ex) {
+            JOptionPane.showMessageDialog(this,
+                    ex.getMessage(),
                     "Error de validación",
+                    JOptionPane.ERROR_MESSAGE);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Ocurrió un error inesperado: " + ex.getMessage(),
+                    "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
+        
+    
 
     private Sacramento crearSacramentoSegunTipo(
             String tipoUi,

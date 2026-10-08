@@ -173,7 +173,7 @@ public class Login extends JFrame {
         	 String usuario = txtUsuario.getText().trim();
         	    String contrasena = new String(txtContrasena.getPassword());
 
-        	    if (usuario.equals("Mesadepartes") && contrasena.equals(contrasenaActual)) {
+        	    if (usuario.equals("Sagrada familia") && contrasena.equals(contrasenaActual)) {
 
         	        JOptionPane.showMessageDialog(this,
         	                "Inicio de sesión correcto.");
